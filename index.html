@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odin Recipes — Home Kitchen</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="hero">
+    <div class="eyebrow">Recipes from home</div>
+    <h1>Everyday South Indian cooking, written the way it's actually made</h1>
+    <p>Five dishes, no shortcuts, no mystery ingredients — just what's usually on the stove.</p>
+  </header>
+
+  <div class="controls">
+    <div class="search-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search recipes, e.g. coconut, rice...">
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip active" data-category="all">All</button>
+      <button class="chip" data-category="Breakfast">Breakfast</button>
+      <button class="chip" data-category="Rice">Rice</button>
+      <button class="chip" data-category="Curry">Curry</button>
+    </div>
+  </div>
+
+  <main class="grid" id="recipeGrid">
+
+    <a href="recipes/dosa.html" class="card" data-name="dosa" data-category="Breakfast">
+      <div class="category">Breakfast</div>
+      <h2>Dosa</h2>
+      <p>Crisp, thin rice-and-lentil crepe, golden at the edges.</p>
+      <div class="card-footer">
+        <span class="time">30 min + ferment</span>
+        <span class="spice">
+          <span class="filled"></span><span></span><span></span>
+        </span>
+      </div>
+    </a>
+
+    <a href="recipes/sambar.html" class="card" data-name="sambar" data-category="Curry">
+      <div class="category">Curry</div>
+      <h2>Sambar</h2>
+      <p>Tangy lentil and vegetable stew, tempered with mustard seed.</p>
+      <div class="card-footer">
+        <span class="time">40 min</span>
+        <span class="spice">
+          <span class="filled"></span><span class="filled"></span><span></span>
+        </span>
+      </div>
+    </a>
+
+    <a href="recipes/idly.html" class="card" data-name="idly" data-category="Breakfast">
+      <div class="category">Breakfast</div>
+      <h2>Idly</h2>
+      <p>Steamed rice cakes, soft and pillowy, best with chutney.</p>
+      <div class="card-footer">
+        <span class="time">20 min + ferment</span>
+        <span class="spice">
+          <span class="filled"></span><span></span><span></span>
+        </span>
+      </div>
+    </a>
+
+    <a href="recipes/briyani.html" class="card" data-name="briyani" data-category="Rice">
+      <div class="category">Rice</div>
+      <h2>Briyani</h2>
+      <p>Layered rice, slow-cooked with whole spices and ghee.</p>
+      <div class="card-footer">
+        <span class="time">1 hr 15 min</span>
+        <span class="spice">
+          <span class="filled"></span><span class="filled"></span><span class="filled"></span>
+        </span>
+      </div>
+    </a>
+
+    <a href="recipes/white-rice-curry.html" class="card" data-name="white rice with curry" data-category="Rice">
+      <div class="category">Rice</div>
+      <h2>White Rice With Curry</h2>
+      <p>Simple steamed rice, served with a quick vegetable curry.</p>
+      <div class="card-footer">
+        <span class="time">35 min</span>
+        <span class="spice">
+          <span class="filled"></span><span class="filled"></span><span></span>
+        </span>
+      </div>
+    </a>
+
+  </main>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const chips = document.querySelectorAll('.chip');
+    const cards = document.querySelectorAll('.card');
+    const grid = document.getElementById('recipeGrid');
+    let activeCategory = 'all';
+
+    function applyFilters() {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const matchesSearch = card.dataset.name.includes(query);
+        const matchesCategory = activeCategory === 'all' || card.dataset.category === activeCategory;
+        const show = matchesSearch && matchesCategory;
+        card.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+
+      const existingEmpty = grid.querySelector('.empty-state');
+      if (visibleCount === 0 && !existingEmpty) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = "No recipes match — try a different search.";
+        grid.appendChild(empty);
+      } else if (visibleCount > 0 && existingEmpty) {
+        existingEmpty.remove();
+      }
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeCategory = chip.dataset.category;
+        applyFilters();
+      });
+    });
+  </script>
+
+</body>
+</html>
